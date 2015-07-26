@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>CanvasAnimator</title>
+	<link rel="stylesheet" href="./css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="./js/CanvasAnimator.js"></script>
+</head>
+<body>	
+	<div id="container">
+		<h1>Animated Canvas</h1>
+		<canvas id="animatedCanvas"></canvas>
+		<p><div id="start" style="cursor:pointer" class="noselect btn btn-primary btn-sm">start</div>
+		<div id="stop" style="cursor:pointer" class="noselect btn btn-primary btn-sm">stop</div>
+		<div id="restart" style="cursor:pointer" class="noselect btn btn-primary btn-sm">restart</div></p>
+		<p><div id="pauseframe" style="cursor:pointer" class="noselect btn btn-primary btn-sm">pause frame</div>
+		<div id="previousframe" style="cursor:pointer" class="noselect btn btn-primary btn-sm">previous frame</div>
+		<div id="nextframe" style="cursor:pointer" class="noselect btn btn-primary btn-sm">next frame</div></p>
+		<p><div id="pauseset" style="cursor:pointer" class="noselect btn btn-primary btn-sm">pause set</div>
+		<div id="previousset" style="cursor:pointer" class="noselect btn btn-primary btn-sm">previous set</div>
+		<div id="nextset" style="cursor:pointer" class="noselect btn btn-primary btn-sm">next set</div></p>
+		<div id="canvasAnimatorErrors" style="color:red;font-size:8px"></div>
+	</div>
+	<script>
+		$(document).ready(function (){
+			var config = {
+				debug : true,
+				autoPlay : true,
+				loopAll : true,
+				canvasSelector : "#animatedCanvas",
+				nearestNeighbor : true,
+				pixelMultiplier : 3,
+				srcWidth : 119,
+				srcHeight : 116,
+				updateRateMs : 10,
+				animSets : [
+					{ // set
+						shouldLoop : function(loopNumber) {
+							if (loopNumber < 9) {
+								return true;
+							}
+							return false;
+						},
+						frameDurationModifier : function(currentFrameDuration, loopTotalElapsedMs, loopNumber, frameNumber) {
+							if (frameNumber == 0) {
+								return currentFrameDuration;
+							} else {
+								var adjusted = currentFrameDuration - loopNumber * 4; // fastest = 90 - 8 * 2
+								return adjusted;
+							}
+						},
+						loop : [
+							{ // frame 0
+								img : "./img/frame1.png",
+								duration : 90
+							},
+							{
+								img : "./img/frame1.png",
+								duration : 90,
+								soundFunc : function() {
+									var rand = Math.floor((Math.random() * 10) + 1); 
+									if (rand > 9) return "./snd/ding.wav";
+								}
+							}
+						]
+					},
+					{ // set 2
+						frameDurationModifier : function(currentFrameDuration) {
+							var adjusted = currentFrameDuration - 10 * 4;
+							return adjusted;
+						},
+						loop : [
+							{
+								img : "./img/frame1.png",
+								duration : 90
+							}
+						]
+					},
+					{ // set 3
+						frameDurationModifier : function(currentFrameDuration) {
+							var adjusted = currentFrameDuration - 20;
+							return adjusted;
+						},
+						shouldLoop : function(loopNumber) {
+							if (loopNumber < 5) {
+								return true;
+							}
+							return false;
+						},
+						loop : [
+							{
+								img : "./img/frame1.png",
+								duration : 90
+							}
+						]
+					},
+				]
+			}
+			var animator = new CanvasAnimator( config );
+			$("#start").on("click",function() {
+				animator.start();
+			});
+			$("#stop").on("click",function() {
+				animator.stop();
+			});
+			$("#restart").on("click",function() {
+				animator.reset();
+			});
+			$("#pauseframe").on("click",function() {
+				animator.togglePauseFrame();
+			});
+			$("#pauseset").on("click",function() {
+				animator.togglePauseSet();
+			});
+			$("#previousset").on("click",function() {
+				animator.previousSet();
+			});
+			$("#nextset").on("click",function() {
+				animator.nextSet();
+			});
+			$("#previousframe").on("click",function() {
+				animator.previousFrame();
+			});
+			$("#nextframe").on("click",function() {
+				animator.nextFrame();
+			});
+		});
+	</script>
+</body>
+</html>
