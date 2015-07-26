@@ -5,7 +5,6 @@
 var CanvasAnimator = function CanvasAnimator(settings) {
 	var self = this;
 	
-	
 	self.config = {
 		debug : true,
 		canvasSelector : "#animatedCanvas",
@@ -104,6 +103,7 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 	}
 	self.loadAssets = function loadAssets() {
 		var set;
+		var first = true;
 		for (set in self.config.animSets) {
 			var setIndex = set;
 			set = self.config.animSets[set];
@@ -142,6 +142,10 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 					self.log("found frame with no duration set, defaulting to 100 ms");
 				}
 				img = new Image;
+				if (!self.config.autoPlay && first) {
+					first = false;
+					img.onload = self.paintCurrentFrame;
+				}
 				img.src = imgUrl;
 				self.cache[imgUrl] = img;
 			}
