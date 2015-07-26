@@ -18,17 +18,17 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 	};
 	
 	if (settings && typeof(settings) == 'object') {
-		$.extend(self.config, settings);
+		jQuery.extend(self.config, settings);
 	}
 	
-	self.errorLog = $("#canvasAnimatorErrors");
+	self.errorLog = jQuery("#canvasAnimatorErrors");
 	self.log = function(message) {
 		if (!self.config.debug || self.errorLog.length == 0) return;
-		var entry = $("<p>").text(message).css({"margin":"0"});
+		var entry = jQuery("<p>").text(message).css({"margin":"0"});
 		self.errorLog.append(entry);
 	}
 	self.cache = {};
-	self.canvas = $(self.config.canvasSelector);
+	self.canvas = jQuery(self.config.canvasSelector);
 	// sanity check
 	//
 	if (typeof(self.config.nearestNeighbor) != 'boolean') {
