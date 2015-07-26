@@ -264,7 +264,6 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 	self.reset = function reset() {
 		self.dirty = true;
 		self.startTime = new Date();
-		self.animating = true;
 		self.currentSet = 0;
 		self.currentFrame = 0;
 		self.currentLoops = 0;
@@ -299,13 +298,23 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 						self.advanceCurrentFrame();
 						currentSet = self.config.animSets[self.currentSet];
 						currentFrame = currentSet.loop[self.currentFrame];
-						var soundUrl = currentFrame.soundFunc();
-						var cachedSound;
-						if (!self.cache[soundUrl]) {
-							self.cache[soundUrl] = new Audio(soundUrl);
+						var sound = currentFrame.soundFunc();
+						if (sound) {
+							if (typeof(sound) == 'string') {
+								// user supplied audio URL
+								// use basic sound support
+								var cachedSound;
+								if (!self.cache[sound]) {
+									self.cache[sound] = new Audio(sound);
+								}
+								cachedSound = self.cache[soundUrl];
+								cachedSound.play();
+							} else if (typeof(sound) == 'function') {
+								// allow users to return a sound function to execute
+								// for using their own audio engine
+								sound(); 
+							}
 						}
-						cachedSound = self.cache[soundUrl];
-						cachedSound.play();
 						self.dirty = true;
 					}
 					if (self.dirty) {
@@ -319,16 +328,8 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 	self.loadAssets();
 	self.canvas.css({"cursor":"pointer"});
 	self.paintCurrentFrame();
-	if (self.config.autoPlay) {
-		self.animate();
-		self.canvas.on("click", self.toggle);
-	} else {
-		self.canvas.on("click", function() {
-			self.animate();
-			self.canvas.off("click");
-			self.canvas.on("click", self.toggle);
-		});
-	}
-	
+	self.animating = self.config.autoPlay;
+	self.canvas.on("click", self.toggle);
+	self.animate();
 }
 
