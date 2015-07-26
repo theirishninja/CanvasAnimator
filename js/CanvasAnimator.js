@@ -307,7 +307,7 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 								if (!self.cache[sound]) {
 									self.cache[sound] = new Audio(sound);
 								}
-								cachedSound = self.cache[soundUrl];
+								cachedSound = self.cache[sound];
 								cachedSound.play();
 							} else if (typeof(sound) == 'function') {
 								// allow users to return a sound function to execute
@@ -332,4 +332,3 @@ var CanvasAnimator = function CanvasAnimator(settings) {
 	self.canvas.on("click", self.toggle);
 	self.animate();
 }
-
