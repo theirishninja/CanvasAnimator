@@ -1,6 +1,6 @@
 // requires jQuery
 // CanvasAnimator
-// Copyright (c) 2015, boned (https://github.com/bonedacity)
+// Copyright (c) 2015, boned (https://github.com/theirishninja)
 // All rights reserved.
 var CanvasAnimator = function CanvasAnimator(settings) {
 	var self = this;
